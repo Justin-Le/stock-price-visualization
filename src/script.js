@@ -3,8 +3,8 @@
 (function() {
   var margin = {top: 30, right: 20, bottom: 100, left: 50},
     margin2  = {top: 210, right: 20, bottom: 20, left: 50},
-    width    = 764 - margin.left - margin.right,
-    height   = 283 - margin.top - margin.bottom,
+    width    = 1000 - margin.left - margin.right,
+    height   = 400 - margin.top - margin.bottom,
     height2  = 283 - margin2.top - margin2.bottom;
 
   var parseDate = d3.time.format('%d/%m/%Y').parse,
@@ -41,7 +41,7 @@
   var svg = d3.select('body').append('svg')
     .attr('class', 'chart')
     .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom + 60);
+    .attr('height', height + margin.top + margin.bottom + 400);
 
   svg.append('defs').append('clipPath')
     .attr('id', 'clip')
@@ -63,11 +63,11 @@
   var barsGroup = svg.append('g')
     .attr('class', 'volume')
     .attr('clip-path', 'url(#clip)')
-    .attr('transform', 'translate(' + margin.left + ',' + (margin.top + 60 + 20) + ')');
+    .attr('transform', 'translate(' + margin.left + ',' + (margin.top + 200 + 20) + ')');
 
   var context = svg.append('g')
     .attr('class', 'context')
-    .attr('transform', 'translate(' + margin2.left + ',' + (margin2.top + 60) + ')');
+    .attr('transform', 'translate(' + margin2.left + ',' + (margin2.top + 200) + ')');
 
   var legend = svg.append('g')
     .attr('class', 'chart__legend')
@@ -186,7 +186,7 @@
     context.append('g')
         .attr('class', 'x axis chart__axis--context')
         .attr('y', 0)
-        .attr('transform', 'translate(0,' + (height2 - 22) + ')')
+        .attr('transform', 'translate(0,' + (height2) + ')')
         .call(xAxis2);
 
     context.append('g')
@@ -210,10 +210,10 @@
     function brushed() {
       var ext = brush.extent();
       if (!brush.empty()) {
-        x.domain(brush.empty() ? x2.domain() : brush.extent());
+        x.domain(ext);
         y.domain([
-          d3.min(data.map(function(d) { return (d.date >= ext[0] && d.date <= ext[1]) ? d.price : max; })),
-          d3.max(data.map(function(d) { return (d.date >= ext[0] && d.date <= ext[1]) ? d.price : min; }))
+          d3.min(data.map(function(d) { return (d.date >= ext[0] && d.date <= ext[1]) ? d.price : max; })) - 5,
+          d3.max(data.map(function(d) { return (d.date >= ext[0] && d.date <= ext[1]) ? d.price : min; })) + 5
         ]);
         range.text(legendFormat(new Date(ext[0])) + ' - ' + legendFormat(new Date(ext[1])))
         focusGraph.attr('x', function(d, i) { return x(d.date); });
@@ -235,7 +235,7 @@
         .append('text')
         .attr('class', 'chart__range-selection')
         .text(v)
-        .attr('transform', 'translate(' + (18 * i) + ', 0)')
+        .attr('transform', 'translate(' + (32 * i) + ', 0)')
         .on('click', function(d) { focusOnRange(this.textContent); });
     }
 
